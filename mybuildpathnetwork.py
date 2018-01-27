@@ -27,6 +27,20 @@ from core import *
 def myBuildPathNetwork(pathnodes, world, agent = None):
 	lines = []
 	### YOUR CODE GOES BELOW HERE ###
+	uncheckedNodes = copy.copy(pathnodes)
+	obsLines = world.getLines()
+	while len(uncheckedNodes) > 0:
+		for aNode in uncheckedNodes:
+			if not (rayTraceWorld(uncheckedNodes[0],aNode,obsLines)):
+				if uncheckedNodes[0]!=aNode:
+					edgeCollidesFlag = True
+					for aLine in obsLines:
+						if (minimumDistance(aLine,uncheckedNodes[0]) <= agent.getMaxRadius()) or (minimumDistance(aLine,aNode) <= agent.getMaxRadius()) or (minimumDistance((uncheckedNodes[0],aNode),aLine[0]) <= agent.getMaxRadius()) or (minimumDistance((uncheckedNodes[0],aNode),aLine[1]) <= agent.getMaxRadius()):
+								edgeCollidesFlag = False
+					if edgeCollidesFlag:
+						lines.append((uncheckedNodes[0],aNode))
+											
+		uncheckedNodes.pop(0)
 
 	### YOUR CODE GOES ABOVE HERE ###
 	return lines
